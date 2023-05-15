@@ -12,12 +12,13 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('users', function (Blueprint $table) {
-            $table->id();
-            $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
-            $table->string('password');
-            $table->rememberToken();
+            $table->id()->comment('ID');
+            $table->foreignIdFor(\App\Models\Company::class)->comment('会社ID');  # 外部キーの追加
+            $table->string('name')->comment('氏名');
+            $table->string('email')->unique()->comment('メールアドレス');
+            $table->timestamp('email_verified_at')->nullable()->comment('メール認証日時');
+            $table->string('password')->comment('パスワード');
+            $table->rememberToken()->comment('リメンバートークン');
             $table->timestamps();
         });
     }
