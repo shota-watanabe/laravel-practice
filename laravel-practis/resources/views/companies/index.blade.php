@@ -8,6 +8,9 @@
     <title>Document</title>
 </head>
 <body>
-    @foreach($companies ) @endforeach
+    @foreach($companies as $company)
+        <div>{{ $company->name }}</div>
+    @endforeach
+
 </body>
 </html>

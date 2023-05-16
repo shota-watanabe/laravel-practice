@@ -86,7 +86,9 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    Route::resource('companies', \App\Http\Controllers\CompanyController::class); // 追記
+    // 除外ミドルウェア
+    Route::resource('companies', \App\Http\Controllers\CompanyController::class)
+    ->withoutMiddleware('auth');; // 追記
 });
 
 require __DIR__.'/auth.php';
