@@ -36,5 +36,11 @@ class RouteServiceProvider extends ServiceProvider
             Route::middleware('web')
                 ->group(base_path('routes/web.php'));
         });
+
+        /**
+         * グローバル制約
+         * ルートモデルの結合、パターンフィルターなどを定義
+         */
+        Route::pattern('id', '[0-9]+');
     }
 }

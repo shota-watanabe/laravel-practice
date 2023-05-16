@@ -1,7 +1,11 @@
 <?php
 
+use App\Enums\Category;
 use App\Http\Controllers\ProfileController;
+use App\Models\Company;
+use App\Models\User;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,9 +22,64 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
+// ビュールート
+Route::view('/viewRoute', 'test', ['name' => 'Taylor']);
+
+// 必須パラメータ
+// パラメータと依存注入
+// {id}が数値の場合にのみ実行される
+Route::get('/user/{id}', function (Request $request, string $id) {
+    return 'User '.$id;
+});
+
+// オプションパラメータ
+// デフォルト値を設定しない場合、$name = null
+Route::get('/user/{name?}', function (string $name = 'John') {
+    return $name;
+});
+
+// ルートにパターン制約をすばやく追加できるヘルパメソッド
+// whereNumber...1文字以上の数字であること
+// whereAlpha...アルファベットで大文字か小文字の1文字以上であること
+//Route::get('/user/{id}/{name}', function (string $id, string $name) {
+//    return 'ID '.$id.' '.$name;
+//})->whereNumber('id')->whereAlpha('name');
+
+Route::get('/user/{id}/{name}', function (string $id, string $name) {
+    return 'ID '.$id.' '.$name;
+})->whereAlpha('name');
+
+Route::get('/greeting', function () {
+    return 'Hello World';
+});
+
+// 依存注入
+Route::get('/dashboard', function (Request $request) {
+    return view('dashboard', compact('request'));
 })->middleware(['auth', 'verified'])->name('dashboard');
+
+Route::name('admin.')->group(function () {
+    Route::get('/users', function () {
+        // ルートに"admin.users"が名付けられる
+        return 'admin.users';
+    })->name('users');
+});
+
+// 暗黙の結合
+// リクエストURIの対応する値と一致するIDを持つモデルインスタンスを自動的に挿入
+Route::get('/users/{user}', function (User $user) {
+    return $user->email;
+});
+
+// 暗黙のEnumバインディング
+Route::get('/categories/{category}', function (Category $category) {
+    return $category->value;
+});
+
+// フォールバックルート
+Route::fallback(function () {
+    return 'ページが見つかりません';
+});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

@@ -12,7 +12,8 @@ use Illuminate\Support\Str;
 class UserFactory extends Factory
 {
     /**
-     * Define the model's default state.
+     * モデルのデフォルト状態の定義.
+     * ファクトリを使用してモデルを作成するときに適用する必要がある属性値のデフォルトセットを返す.
      *
      * @return array<string, mixed>
      */
