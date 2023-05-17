@@ -12,28 +12,32 @@
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
-                <table>
-                    <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Created At</th>
-                        <th>Updated At</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($companies as $company)
+            @if(count($companies) >= 1)
+                <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                    <table>
+                        <thead>
                         <tr>
-                            <td>{{ $company->id }}</td>
-                            <td>{{ Html::linkRoute('companies.show', $company->name, compact('company')) }}</td>
-                            <td>{{ $company->created_at }}</td>
-                            <td>{{ $company->updated_at }}</td>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>Created At</th>
+                            <th>Updated At</th>
                         </tr>
-                    @endforeach
-                    </tbody>
-                </table>
-            </div>
+                        </thead>
+                        <tbody>
+                        @foreach($companies as $company)
+                            <tr>
+                                <td>{{ $company->id }}</td>
+                                <td>{{ Html::linkRoute('companies.show', $company->name, compact('company')) }}</td>
+                                <td>{{ $company->created_at }}</td>
+                                <td>{{ $company->updated_at }}</td>
+                            </tr>
+                        @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                会社は登録されていません。
+            @endif
         </div>
     </div>
 </x-app-layout>
