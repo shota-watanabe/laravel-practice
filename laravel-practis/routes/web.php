@@ -87,8 +87,19 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     // 除外ミドルウェア
-    Route::resource('companies', \App\Http\Controllers\CompanyController::class)
-    ->withoutMiddleware('auth');; // 追記
+//    Route::resource('companies', \App\Http\Controllers\CompanyController::class)
+//    ->withoutMiddleware('auth')
+//        // 見つからないモデルの動作のカスタマイズ
+//        ->missing(function (Request $request) {
+//            return Redirect::route('companies.index');
+//        });; // 追記
+
+Route::resource('companies', \App\Http\Controllers\CompanyController::class)
+    // 部分的なリソースルート
+    ->except('index')
+    ->missing(function (Request $request) {
+        return Redirect::route('companies.index');
+    });; // 追記
 });
 
 require __DIR__.'/auth.php';
