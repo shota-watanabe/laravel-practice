@@ -133,6 +133,8 @@
       <path value="$PROJECT_DIR$/laravel-practis/vendor/doctrine/event-manager" />
       <path value="$PROJECT_DIR$/laravel-practis/vendor/doctrine/dbal" />
       <path value="$PROJECT_DIR$/laravel-practis/vendor/laravel/breeze" />
+      <path value="$PROJECT_DIR$/laravel-practis/vendor/shibuyakosuke/laravel-language-setting" />
+      <path value="$PROJECT_DIR$/laravel-practis/vendor/laravelcollective/html" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.1" />

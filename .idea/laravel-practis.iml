@@ -129,6 +129,8 @@
       <excludeFolder url="file://$MODULE_DIR$/laravel-practis/vendor/doctrine/event-manager" />
       <excludeFolder url="file://$MODULE_DIR$/laravel-practis/vendor/doctrine/dbal" />
       <excludeFolder url="file://$MODULE_DIR$/laravel-practis/vendor/laravel/breeze" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel-practis/vendor/shibuyakosuke/laravel-language-setting" />
+      <excludeFolder url="file://$MODULE_DIR$/laravel-practis/vendor/laravelcollective/html" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
