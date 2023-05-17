@@ -49,8 +49,11 @@ Route::get('/user/{id}/{name}', function (string $id, string $name) {
     return 'ID '.$id.' '.$name;
 })->whereAlpha('name');
 
+// withメソッドを使用して個々のデータをビューへ追加
 Route::get('/greeting', function () {
-    return 'Hello World';
+    return view('greeting')
+        ->with('name', 'Victoria')
+        ->with('occupation', 'Astronaut');
 });
 
 // 依存注入
