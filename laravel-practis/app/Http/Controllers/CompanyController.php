@@ -37,6 +37,11 @@ class CompanyController extends Controller
     public function store(StoreCompanyRequest $request): RedirectResponse
     {
         $company = new Company();
+        // dd($request->input('name'));
+        // dd($request->path()); // companies
+        // dd($request->schemeAndHttpHost()); // http://localhost
+        dd($request->cookie());
+
         $company->fill($request->validated())
             ->save();
 

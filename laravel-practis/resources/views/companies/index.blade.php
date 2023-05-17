@@ -1,16 +1,39 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-    @foreach($companies as $company)
-        <div>{{ $company->name }}</div>
-    @endforeach
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Companies') }}
+        </h2>
+    </x-slot>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            {{ Html::linkRoute('companies.create', '新規作成') }}
+        </div>
+    </div>
 
-</body>
-</html>
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Created At</th>
+                        <th>Updated At</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @foreach($companies as $company)
+                        <tr>
+                            <td>{{ $company->id }}</td>
+                            <td>{{ Html::linkRoute('companies.show', $company->name, compact('company')) }}</td>
+                            <td>{{ $company->created_at }}</td>
+                            <td>{{ $company->updated_at }}</td>
+                        </tr>
+                    @endforeach
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</x-app-layout>

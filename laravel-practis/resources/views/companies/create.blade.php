@@ -1,25 +1,38 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
-<h1>会社登録画面</h1>
+<x-app-layout>
+    <x-slot name="header">
+        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+            {{ __('Companies') }}
+        </h2>
+    </x-slot>
 
-<!-- フォームエリア -->
-<h2>フォーム</h2>
-<form action="/companies" method="POST">
-{{-- 非表示のトークン入力フィールドを生成 --}}
-    @csrf
-    名前:<br>
-    <input name="name">
-    <br>
-    {{ csrf_field() }}
-    <button class="btn btn-success"> 送信 </button>
-</form>
-</body>
-</html>
+    @if($errors->any())
+        <div class="py-12">
+            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                @foreach($errors->all() as $error)
+                    <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                        <div class="p-6 text-gray-900">
+                            {{ $error }}
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        </div>
+    @endif
+
+    <div class="py-12">
+        <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+            <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
+                {{ Form::open(['url' => route('companies.store')]) }}
+
+                {{ Form::label('name', 'Name') }}
+                {{ Form::text('name', old('name'), ['placeholder' => '会社名']) }}
+
+                <div>
+                    {{ Form::submit('Save') }}
+                </div>
+
+                {{ Form::close() }}
+            </div>
+        </div>
+    </div>
+</x-app-layout>

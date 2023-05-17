@@ -95,8 +95,6 @@ Route::middleware('auth')->group(function () {
 //        });; // 追記
 
 Route::resource('companies', \App\Http\Controllers\CompanyController::class)
-    // 部分的なリソースルート
-    ->except('index')
     ->missing(function (Request $request) {
         return Redirect::route('companies.index');
     });; // 追記
