@@ -79,11 +79,6 @@ Route::get('/categories/{category}', function (Category $category) {
     return $category->value;
 });
 
-// フォールバックルート
-Route::fallback(function () {
-    return 'ページが見つかりません';
-});
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
