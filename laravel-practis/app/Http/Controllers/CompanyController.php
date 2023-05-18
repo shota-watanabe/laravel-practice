@@ -7,6 +7,7 @@ use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Company;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Log;
 
 class CompanyController extends Controller
 {
@@ -15,6 +16,7 @@ class CompanyController extends Controller
      */
     public function index(): View
     {
+        Log::info('Logです');
         // 複数の会社を一覧表示するので、変数は複数形で
         $companies = Company::query()
             ->paginate()
