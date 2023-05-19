@@ -53,4 +53,35 @@ class CompanyTest extends TestCase
 
         $response->assertStatus(200);
     }
+
+    public function test_company_store(): void
+    {
+        $url = route('companies.store');
+        $company_name = $this->faker->company;
+
+        // 認証されていない場合、ログイン画面にリダイレクトされること
+        $this->post($url, [
+            'name' => $company_name,
+        ])->assertRedirect(route('login'));
+
+        $response = $this->actingAs($this->user)
+            ->post($url, [
+                'name' => $company_name,
+            ]);
+
+        $response->assertStatus(302);
+
+        $this->assertDatabaseHas('companies', [
+            'name' => $company_name,
+        ]);
+
+        // バリデーション
+        $response = $this->actingAs($this->user)
+            ->post($url, [
+                'name' => null,
+            ]);
+
+        $validation = 'nameは必ず指定してください。';
+        $this->get(route('companies.create'))->assertSee($validation);
+    }
 }
