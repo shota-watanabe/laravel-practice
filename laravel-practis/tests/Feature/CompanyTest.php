@@ -23,7 +23,7 @@ class CompanyTest extends TestCase
         $this->user = User::factory()->create();
     }
 
-    public function test_company_index(): void
+    public function test_index(): void
     {
         $url = route('companies.index');
 
@@ -39,7 +39,7 @@ class CompanyTest extends TestCase
         $this->assertCount(15, $companies);
     }
 
-    public function test_company_create(): void
+    public function test_create(): void
     {
         $url = route('companies.create');
 
@@ -49,7 +49,7 @@ class CompanyTest extends TestCase
         $this->actingAs($this->user)->get($url)->assertStatus(200);
     }
 
-    public function test_company_store(): void
+    public function test_store(): void
     {
         $url = route('companies.store');
         $company_name = $this->faker->company;
@@ -88,5 +88,65 @@ class CompanyTest extends TestCase
 
         // 存在しない ID のときは、404 になる
         $this->actingAs($this->user)->get(route('companies.show', 9999))->assertStatus(404);
+    }
+
+    public function test_edit(): void
+    {
+        $url = route('companies.edit', $this->companies->random()->first()->id);
+
+        // Guest のときは、login にリダイレクトされる
+        $this->get($url)->assertRedirect(route('login'));
+
+        $this->actingAs($this->user)->get($url)->assertStatus(200);
+
+    }
+
+    public function test_update()
+    {
+        $company = $this->companies->random()->first();
+
+        $company_name = $this->faker->company;
+
+        $url = route('companies.update', $company->id);
+
+        // Guest のときは、login にリダイレクトされる
+        $this->put($url, [
+            'name' => $company_name,
+        ])->assertRedirect(route('login'));
+
+        $response = $this->actingAs($this->user)
+            ->put($url, [
+                'name' => $company_name,
+            ]);
+
+        $response->assertStatus(302);
+
+        // 更新後 companies.show にリダイレクトされる
+        $response->assertRedirect(route('companies.show', compact('company')));
+
+        $this->assertDatabaseHas('companies', [
+            'name' => $company_name,
+        ]);
+    }
+
+    public function test_destroy()
+    {
+        $company = $this->companies->random()->first();
+
+        $url = route('companies.destroy', $company->id);
+
+        // Guest のときは、login にリダイレクトされる
+        $this->delete($url)->assertRedirect(route('login'));
+
+        $response = $this->actingAs($this->user)->delete($url);
+
+        $response->assertStatus(302);
+
+        // 削除後 companies.index にリダイレクトされる
+        $response->assertRedirect(route('companies.index'));
+
+        $this->assertDatabaseMissing('companies', [
+            'id' => $company->id,
+        ]);
     }
 }
