@@ -19,17 +19,16 @@ class CompanyTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        Company::factory()->count(20)->create();
+        $this->companies = Company::factory()->count(20)->create();
         $this->user = User::factory()->create();
     }
 
     public function test_company_index(): void
     {
         $url = route('companies.index');
-        $response = $this->get($url);
 
         // 認証されていない場合、ログイン画面にリダイレクトされること
-        $response->assertRedirect('/login');
+        $this->get($url)->assertRedirect('/login');
 
         $response = $this->actingAs($this->user)->get($url);
 
@@ -44,14 +43,10 @@ class CompanyTest extends TestCase
     {
         $url = route('companies.create');
 
-        $response = $this->get($url);
-
         // 認証されていない場合、ログイン画面にリダイレクトされること
-        $response->assertRedirect('/login');
+        $this->get($url)->assertRedirect('/login');
 
-        $response = $this->actingAs($this->user)->get($url);
-
-        $response->assertStatus(200);
+        $this->actingAs($this->user)->get($url)->assertStatus(200);
     }
 
     public function test_company_store(): void
@@ -64,12 +59,10 @@ class CompanyTest extends TestCase
             'name' => $company_name,
         ])->assertRedirect(route('login'));
 
-        $response = $this->actingAs($this->user)
+        $this->actingAs($this->user)
             ->post($url, [
                 'name' => $company_name,
-            ]);
-
-        $response->assertStatus(302);
+            ])->assertStatus(302);;
 
         $this->assertDatabaseHas('companies', [
             'name' => $company_name,
@@ -83,5 +76,17 @@ class CompanyTest extends TestCase
 
         $validation = 'nameは必ず指定してください。';
         $this->get(route('companies.create'))->assertSee($validation);
+    }
+
+    public function test_show(): void
+    {
+        $url = route('companies.show', $this->companies->random()->first()->id);
+        // Guest のときは、login にリダイレクトされる
+        $this->get($url)->assertRedirect(route('login'));
+
+        $this->actingAs($this->user)->get($url)->assertStatus(200);
+
+        // 存在しない ID のときは、404 になる
+        $this->actingAs($this->user)->get(route('companies.show', 9999))->assertStatus(404);
     }
 }

@@ -92,10 +92,7 @@ Route::middleware('auth')->group(function () {
 //            return Redirect::route('companies.index');
 //        });; // 追記
 
-Route::resource('companies', \App\Http\Controllers\CompanyController::class)
-    ->missing(function (Request $request) {
-        return Redirect::route('companies.index');
-    });; // 追記
+Route::resource('companies', \App\Http\Controllers\CompanyController::class);
 });
 
 require __DIR__.'/auth.php';
