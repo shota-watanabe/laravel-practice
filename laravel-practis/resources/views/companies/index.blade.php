@@ -30,6 +30,7 @@
                                 <td>{{ Html::linkRoute('companies.show', $company->name, compact('company')) }}</td>
                                 <td>{{ $company->created_at }}</td>
                                 <td>{{ $company->updated_at }}</td>
+                                <td><button type="button" onclick="location.href='{{ route('companies.sections.create', ['company' => $company->id]) }}'">部署登録</button></td>
                             </tr>
                         @endforeach
                         </tbody>
