@@ -4,6 +4,11 @@
             {{ __('Companies') }}
         </h2>
     </x-slot>
+    @if (session('status'))
+        <div class="alert alert-success">
+            {{ session('status') }}
+        </div>
+    @endif
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             {{ Html::linkRoute('companies.create', '新規作成') }}

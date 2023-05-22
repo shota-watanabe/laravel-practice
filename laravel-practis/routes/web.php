@@ -93,7 +93,7 @@ Route::middleware('auth')->group(function () {
 //        });; // 追記
 
     Route::resource('companies', \App\Http\Controllers\CompanyController::class);
-    Route::resource('companies.sections', \App\Http\Controllers\SectionController::class)->shallow();
+    Route::resource('companies.sections', \App\Http\Controllers\SectionController::class);
     // Route::resource('photos.comments', CommentController::class)->shallow();
 });
 
