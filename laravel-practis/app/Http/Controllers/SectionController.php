@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreSectionRequest;
+use App\Http\Requests\UpdateSectionRequest;
 use App\Models\Company;
 use App\Models\Section;
 use App\Models\User;
@@ -25,18 +26,10 @@ class SectionController extends Controller
     {
         $section = New Section();
         $company = Company::findOrFail($company_id);
-        // $company->sections->fill($request->validated())->save();
 
-        // $request->validated();
-        $section = $section->create([
+        $section->create([
            'company_id' => $company->id,
            'name' => $request->name
-        ]);
-
-        $user_section = New UserSection();
-        $user_section->create([
-            'user_id' => Auth::id(),
-            'section_id' => $section->id
         ]);
 
         return redirect()
@@ -44,10 +37,18 @@ class SectionController extends Controller
             ->with('status', 'Section Created!');
     }
 
-    public function edit($company_id, $section_id) {
+    public function edit($company_id, $section_id): View {
         $company = Company::findOrFail($company_id);
         $section = Section::findOrFail($section_id);
 
         return view('companies.sections.edit', compact('company', 'section'));
+    }
+
+    public function update(UpdateSectionRequest $request, Company $company, Section $section): RedirectResponse
+    {
+        $section->fill($request->validated())
+            ->save();
+        return redirect()->route('companies.show', compact('company'));
+
     }
 }
