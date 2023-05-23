@@ -19,6 +19,7 @@
                 </div>
 
                 {{ Form::close() }}
+                <a href="{{ route('companies.index') }}">もどる</a>
             </div>
         </div>
     </div>
