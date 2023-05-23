@@ -33,7 +33,7 @@ class SectionController extends Controller
         ]);
 
         return redirect()
-            ->route('companies.index')
+            ->route('companies.show', compact('company'))
             ->with('status', 'Section Created!');
     }
 
