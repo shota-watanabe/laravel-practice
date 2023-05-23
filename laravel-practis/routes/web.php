@@ -94,7 +94,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('companies', \App\Http\Controllers\CompanyController::class);
     Route::resource('companies.sections', \App\Http\Controllers\SectionController::class)
-    ->except(['show', 'destroy']);
+    ->except(['index', 'show', 'destroy']);
 });
 
 require __DIR__.'/auth.php';

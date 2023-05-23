@@ -53,7 +53,10 @@ class CompanyController extends Controller
      */
     public function show(Company $company): View
     {
-        return view('companies.show', compact('company'));
+        $sections = $company->sections()
+            ->paginate()
+            ->withQueryString();;
+        return view('companies.show', compact('company', 'sections'));
     }
 
     /**
