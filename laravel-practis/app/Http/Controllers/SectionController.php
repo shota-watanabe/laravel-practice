@@ -24,10 +24,9 @@ class SectionController extends Controller
 
     public function store(StoreSectionRequest $request, $company_id): RedirectResponse
     {
-        $section = New Section();
         $company = Company::findOrFail($company_id);
 
-        $section->create([
+        $company->sections()->create([
            'company_id' => $company->id,
            'name' => $request->name
         ]);
