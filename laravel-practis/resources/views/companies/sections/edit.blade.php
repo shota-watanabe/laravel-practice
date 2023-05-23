@@ -32,7 +32,7 @@
                 </div>
 
                 {{ Form::close() }}
-                <a href="{{ route('companies.index') }}">もどる</a>
+                <a href="{{ route('companies.show', ['company' => $company->id]) }}">もどる</a>
             </div>
         </div>
     </div>

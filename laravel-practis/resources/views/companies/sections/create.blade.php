@@ -18,7 +18,7 @@
                 <div>
                     {{ Form::submit('Save') }}
                 </div>
-                <a href="{{ route('companies.index') }}">もどる</a>
+                <a href="{{ route('companies.show', ['company' => $company->id]) }}">もどる</a>
 
                 {{ Form::close() }}
             </div>

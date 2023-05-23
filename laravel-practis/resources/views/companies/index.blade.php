@@ -33,10 +33,6 @@
                                 </th>
                                 <th scope="col"
                                     class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
-                                    Sections
-                                </th>
-                                <th scope="col"
-                                    class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                     Created At
                                 </th>
                                 <th scope="col"
@@ -54,23 +50,8 @@
                                     <td class="px-6 py-4 whitespace-nowrap text-indigo-600">
                                         {{ Html::linkRoute('companies.show', $company->name, compact('company')) }}
                                     </td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        @if(count($company->sections) >= 1)
-                                            <ul class="list-disc list-inside text-indigo-600">
-                                                @foreach($company->sections as $section)
-                                                    <li>{{ Html::linkRoute('companies.sections.edit', $section->name, compact('company', 'section')) }}</li>
-                                                @endforeach
-                                            </ul>
-                                        @else
-                                            -
-                                        @endif
-                                    </td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $company->created_at }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $company->updated_at }}</td>
-                                    <td class="px-6 py-4 whitespace-nowrap">
-                                        <a href="{{ route('companies.sections.create', ['company' => $company->id]) }}"
-                                           class="text-indigo-600">部署登録</a>
-                                    </td>
                                 </tr>
                             @endforeach
                             </tbody>
