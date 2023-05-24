@@ -15,10 +15,13 @@
                 {{ Form::label('name', 'Name') }}
                 {{ Form::text('name', old('name'), ['placeholder' => '部署名']) }}
 
-                <div>
+                <div class="py-4">
                     {{ Form::submit('Save') }}
                 </div>
-                <a href="{{ route('companies.show', ['company' => $company->id]) }}">もどる</a>
+
+                <div class="py-4">
+                    <a href="{{ route('companies.show', ['company' => $company->id]) }}">もどる</a>
+                </div>
 
                 {{ Form::close() }}
             </div>

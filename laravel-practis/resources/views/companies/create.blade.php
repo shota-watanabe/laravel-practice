@@ -19,7 +19,9 @@
                 </div>
 
                 {{ Form::close() }}
-                <a href="{{ route('companies.index') }}">もどる</a>
+                <div class="py-4">
+                    {{ Html::linkRoute('companies.index', 'もどる') }}
+                </div>
             </div>
         </div>
     </div>

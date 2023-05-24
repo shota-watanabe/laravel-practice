@@ -88,7 +88,7 @@ class SectionTest extends TestCase
                 'name' => $section_name,
             ]);
 
-        $validation = 'nameの値は既に存在しています。';
+        $validation = '部署名は既に存在しています。';
         $this->get(route('companies.sections.create', $company->id))->assertSee($validation);
 
     }
