@@ -32,7 +32,7 @@ class UserSectionTest extends TestCase
         $section = $company->sections->first();
         $random_user_id = $company->users->random()->first()->id;
 
-        $url = route('companies.sections.user_sections.store', ['company' => $company->id, 'section' => $section->id]);
+        $url = route('companies.sections.user_sections.store', ['company' => $company, 'section' => $section]);
 
         // 認証されていない場合、ログイン画面にリダイレクトされること
         $this->post($url, [

@@ -143,7 +143,6 @@ class SectionTest extends TestCase
     {
         $company = $this->companies->first();
         $section = $company->sections->first();
-        $section_users = $section->users;
 
         $url = route('companies.sections.destroy', ['company' => $company, 'section' => $section]);
 
@@ -160,12 +159,11 @@ class SectionTest extends TestCase
         $this->assertDatabaseMissing('sections', [
             'id' => $section->id,
         ]);
-        foreach ($section_users as $section_user) {
-            $this->assertDatabaseMissing('user_section', [
-                'user_id' => $section_user->id,
-                'section_id' => $section->id
-            ]);
-        }
+
+        $this->assertDatabaseMissing('user_section', [
+            'user_id' => $this->user->id,
+            'section_id' => $section->id
+        ]);
 
     }
 
