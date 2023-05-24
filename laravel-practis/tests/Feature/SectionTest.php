@@ -83,6 +83,14 @@ class SectionTest extends TestCase
         $validation = 'nameは、255文字以下で指定してください。';
         $this->get(route('companies.sections.create', $company->id))->assertSee($validation);
 
+        $this->actingAs($this->user)
+            ->post($url, [
+                'name' => $section_name,
+            ]);
+
+        $validation = 'nameの値は既に存在しています。';
+        $this->get(route('companies.sections.create', $company->id))->assertSee($validation);
+
     }
 
     public function test_edit(): void
@@ -136,7 +144,6 @@ class SectionTest extends TestCase
 
         $validation = 'nameは、255文字以下で指定してください。';
         $this->get(route('companies.sections.edit', ['company' => $company, 'section' => $section]))->assertSee($validation);
-
     }
 
     public function test_destroy(): void
