@@ -27,8 +27,8 @@ class SectionController extends Controller
         $company = Company::findOrFail($company_id);
 
         $company->sections()->create([
-           'company_id' => $company->id,
-           'name' => $request->name
+            'company_id' => $company->id,
+            'name' => $request->name
         ]);
 
         return redirect()
@@ -36,7 +36,8 @@ class SectionController extends Controller
             ->with('status', 'Section Created!');
     }
 
-    public function show(Company $company, Section $section): View {
+    public function show(Company $company, Section $section): View
+    {
         $unjoin_users = User::where('company_id', $company->id)
             ->whereDoesntHave('sections', function ($query) use ($section) {
                 $query->where('section_id', $section->id);
@@ -51,7 +52,8 @@ class SectionController extends Controller
         return view('companies.sections.show', compact('company', 'section', 'unjoin_users'));
     }
 
-    public function edit(Company $company, Section $section): View {
+    public function edit(Company $company, Section $section): View
+    {
 
         return view('companies.sections.edit', compact('company', 'section'));
     }
@@ -66,8 +68,7 @@ class SectionController extends Controller
 
     public function destroy(Company $company, Section $section): RedirectResponse
     {
-        foreach ($section->users as $user)
-        {
+        foreach ($section->users as $user) {
             $section->users()->detach($user->id);
         }
 

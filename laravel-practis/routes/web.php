@@ -30,7 +30,7 @@ Route::view('/viewRoute', 'test', ['name' => 'Taylor']);
 // パラメータと依存注入
 // {id}が数値の場合にのみ実行される
 Route::get('/user/{id}', function (Request $request, string $id) {
-    return 'User '.$id;
+    return 'User ' . $id;
 });
 
 // オプションパラメータ
@@ -47,7 +47,7 @@ Route::get('/user/{name?}', function (string $name = 'John') {
 //})->whereNumber('id')->whereAlpha('name');
 
 Route::get('/user/{id}/{name}', function (string $id, string $name) {
-    return 'ID '.$id.' '.$name;
+    return 'ID ' . $id . ' ' . $name;
 })->whereAlpha('name');
 
 // withメソッドを使用して個々のデータをビューへ追加
@@ -95,8 +95,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('companies', \App\Http\Controllers\CompanyController::class);
     Route::resource('companies.sections', \App\Http\Controllers\SectionController::class)
-    ->except(['index']);
+        ->except(['index']);
     Route::post('companies/{company}/sections/{section}/user_sections', [UserSectionController::class, 'store'])->name('companies.sections.user_sections.store');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

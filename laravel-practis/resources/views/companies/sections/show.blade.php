@@ -33,7 +33,9 @@
                     <a href="{{ route('companies.sections.edit', ['company' => $company->id, 'section' => $section->id]) }}"
                        class="text-indigo-600">{{ $section->name }}</a>
                 </div>
-                <form action="{{ route('companies.sections.user_sections.store', ['company' => $company, 'section' => $section]) }}" method="POST">
+                <form
+                    action="{{ route('companies.sections.user_sections.store', ['company' => $company, 'section' => $section]) }}"
+                    method="POST">
                     @csrf
                     <div class="px-3">
                         <select id="selection" name="user_id">
@@ -45,12 +47,13 @@
                     <button type="submit" class="p-4">{{ $section->name }} に配属</button>
                 </form>
                 <div class="py-4">
-                    <a href="{{ route('companies.show', ['company' => $company]) }}" class="px-3 text-indigo-600">もどる</a>
+                    <a href="{{ route('companies.show', ['company' => $company]) }}"
+                       class="px-3 text-indigo-600">もどる</a>
                 </div>
-            <h2>所属しているユーザー</h2>
-            @foreach($section->users as $user)
-                <option value="{{ $user->id }}">{{ $user->name }}</option>
-            @endforeach
+                <h2>所属しているユーザー</h2>
+                @foreach($section->users as $user)
+                    <option value="{{ $user->id }}">{{ $user->name }}</option>
+                @endforeach
             </div>
         </div>
     </div>

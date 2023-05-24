@@ -13,6 +13,7 @@ class UserSectionTest extends TestCase
 {
     use RefreshDatabase;
     use WithFaker;
+
     /**
      * A basic feature test example.
      */
@@ -24,6 +25,7 @@ class UserSectionTest extends TestCase
         $this->sections = Section::factory()->count(100)->create();
         $this->user = User::factory()->create();
     }
+
     public function test_store(): void
     {
         $company = $this->companies->first();

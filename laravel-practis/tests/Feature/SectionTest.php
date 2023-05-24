@@ -160,8 +160,7 @@ class SectionTest extends TestCase
         $this->assertDatabaseMissing('sections', [
             'id' => $section->id,
         ]);
-        foreach ($section_users as $section_user)
-        {
+        foreach ($section_users as $section_user) {
             $this->assertDatabaseMissing('user_section', [
                 'user_id' => $section_user->id,
                 'section_id' => $section->id
