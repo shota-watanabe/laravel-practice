@@ -2,6 +2,7 @@
 
 use App\Enums\Category;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\UserSectionController;
 use App\Models\Company;
 use App\Models\User;
 use Illuminate\Support\Facades\Route;
@@ -94,7 +95,8 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('companies', \App\Http\Controllers\CompanyController::class);
     Route::resource('companies.sections', \App\Http\Controllers\SectionController::class)
-    ->except(['index', 'show', 'destroy']);
+    ->except(['index', 'destroy']);
+    Route::post('companies/{company}/sections/{section}/user_sections', [UserSectionController::class, 'store'])->name('companies.sections.user_sections.store');
 });
 
 require __DIR__.'/auth.php';
