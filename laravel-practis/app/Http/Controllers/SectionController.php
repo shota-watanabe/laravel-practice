@@ -8,6 +8,7 @@ use App\Models\Company;
 use App\Models\Section;
 use App\Models\User;
 use App\Models\UserSection;
+use App\Rules\UniqueSectionName;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -26,6 +27,9 @@ class SectionController extends Controller
     {
         $company = Company::findOrFail($company_id);
 
+        $request->validate([
+           'name' => [new UniqueSectionName($company->id)]
+        ]);
         $company->sections()->create([
             'company_id' => $company->id,
             'name' => $request->name
