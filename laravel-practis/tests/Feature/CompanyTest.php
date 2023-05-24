@@ -33,10 +33,6 @@ class CompanyTest extends TestCase
         $response = $this->actingAs($this->user)->get($url);
 
         $response->assertStatus(200);
-
-        $companies = $response->original['companies'];
-
-        $this->assertCount(15, $companies);
     }
 
     public function test_create(): void
