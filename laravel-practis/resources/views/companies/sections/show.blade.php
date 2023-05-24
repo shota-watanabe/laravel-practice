@@ -45,7 +45,7 @@
                     <button type="submit" class="p-4">{{ $section->name }} に配属</button>
                 </form>
                 <div class="py-4">
-                    <a href="{{ route('companies.index') }}" class="px-3 text-indigo-600">もどる</a>
+                    <a href="{{ route('companies.show', ['company' => $company]) }}" class="px-3 text-indigo-600">もどる</a>
                 </div>
             <h2>所属しているユーザー</h2>
             @foreach($section->users as $user)

@@ -68,16 +68,15 @@
                                 <tr>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $section->id }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">
-                                        @if($section)
-                                            <ul class="list-disc list-inside text-indigo-600">
-                                                    <li>{{ Html::linkRoute('companies.sections.edit', $section->name, compact('company', 'section')) }}</li>
-                                            </ul>
-                                        @else
-                                            -
-                                        @endif
+                                        <ul class="list-disc list-inside text-indigo-600">
+                                                <li>{{ Html::linkRoute('companies.sections.show', $section->name, compact('company', 'section')) }}</li>
+                                        </ul>
                                     </td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $section->created_at }}</td>
                                     <td class="px-6 py-4 whitespace-nowrap">{{ $section->updated_at }}</td>
+                                    {{ Form::open(['route' => ['companies.sections.destroy', 'company' => $company, 'section' => $section], 'method' => 'delete', 'style' => 'display:inline']) }}
+                                    <td>{{ Form::submit('削除', ['onclick' => "return confirm('本当に削除しますか？')"]) }}</td>
+                                    {{ Form::close() }}
                                 </tr>
                             @endforeach
                             </tbody>

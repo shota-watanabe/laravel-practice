@@ -127,7 +127,7 @@ class SectionTest extends TestCase
             ]);
 
         $validation = 'nameは必ず指定してください。';
-        $this->get(route('companies.sections.edit', ['company' => $company->id, 'section' => $section->id]))->assertSee($validation);
+        $this->get(route('companies.sections.edit', ['company' => $company, 'section' => $section]))->assertSee($validation);
 
         $this->actingAs($this->user)
             ->put($url, [
@@ -135,7 +135,38 @@ class SectionTest extends TestCase
             ]);
 
         $validation = 'nameは、255文字以下で指定してください。';
-        $this->get(route('companies.sections.edit', ['company' => $company->id, 'section' => $section->id]))->assertSee($validation);
+        $this->get(route('companies.sections.edit', ['company' => $company, 'section' => $section]))->assertSee($validation);
+
+    }
+
+    public function test_destroy(): void
+    {
+        $company = $this->companies->first();
+        $section = $company->sections->first();
+        $section_users = $section->users;
+
+        $url = route('companies.sections.destroy', ['company' => $company, 'section' => $section]);
+
+        // Guest のときは、login にリダイレクトされる
+        $this->delete($url)->assertRedirect(route('login'));
+
+        $response = $this->actingAs($this->user)->delete($url);
+
+        $response->assertStatus(302);
+
+        // 削除後 companies.show にリダイレクトされる
+        $response->assertRedirect(route('companies.show', $company));
+
+        $this->assertDatabaseMissing('sections', [
+            'id' => $section->id,
+        ]);
+        foreach ($section_users as $section_user)
+        {
+            $this->assertDatabaseMissing('user_section', [
+                'user_id' => $section_user->id,
+                'section_id' => $section->id
+            ]);
+        }
 
     }
 

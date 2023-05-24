@@ -47,9 +47,6 @@ class SectionController extends Controller
                 $query->where('section_id', $section->id);
             });
         }]);
-//        $users = $company->users()->whereDoesntHave('sections', function ($query) use ($section) {
-//            $query->where('section_id', $section->id);
-//        })->get();
 
         return view('companies.sections.show', compact('company', 'section', 'unjoin_users'));
     }
@@ -65,5 +62,17 @@ class SectionController extends Controller
             ->save();
         return redirect()->route('companies.show', compact('company'));
 
+    }
+
+    public function destroy(Company $company, Section $section): RedirectResponse
+    {
+        foreach ($section->users as $user)
+        {
+            $section->users()->detach($user->id);
+        }
+
+        $section->delete();
+
+        return redirect()->route('companies.show', ['company' => $company]);
     }
 }

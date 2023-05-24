@@ -95,7 +95,7 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('companies', \App\Http\Controllers\CompanyController::class);
     Route::resource('companies.sections', \App\Http\Controllers\SectionController::class)
-    ->except(['index', 'destroy']);
+    ->except(['index']);
     Route::post('companies/{company}/sections/{section}/user_sections', [UserSectionController::class, 'store'])->name('companies.sections.user_sections.store');
 });
 
