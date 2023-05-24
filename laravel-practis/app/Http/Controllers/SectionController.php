@@ -24,12 +24,11 @@ class SectionController extends Controller
 
     public function store(StoreSectionRequest $request, $company_id): RedirectResponse
     {
-        $section = New Section();
         $company = Company::findOrFail($company_id);
 
-        $section->create([
-           'company_id' => $company->id,
-           'name' => $request->name
+        $company->sections()->create([
+            'company_id' => $company->id,
+            'name' => $request->name
         ]);
 
         return redirect()
@@ -37,9 +36,24 @@ class SectionController extends Controller
             ->with('status', 'Section Created!');
     }
 
-    public function edit($company_id, $section_id): View {
-        $company = Company::findOrFail($company_id);
-        $section = Section::findOrFail($section_id);
+    public function show(Company $company, Section $section): View
+    {
+        $unjoin_users = User::where('company_id', $company->id)
+            ->whereDoesntHave('sections', function ($query) use ($section) {
+                $query->where('section_id', $section->id);
+            })
+            ->get();
+        $company->load(['users' => function ($query) use ($section) {
+            $query->whereDoesntHave('sections', function ($query) use ($section) {
+                $query->where('section_id', $section->id);
+            });
+        }]);
+
+        return view('companies.sections.show', compact('company', 'section', 'unjoin_users'));
+    }
+
+    public function edit(Company $company, Section $section): View
+    {
 
         return view('companies.sections.edit', compact('company', 'section'));
     }
@@ -50,5 +64,16 @@ class SectionController extends Controller
             ->save();
         return redirect()->route('companies.show', compact('company'));
 
+    }
+
+    public function destroy(Company $company, Section $section): RedirectResponse
+    {
+        foreach ($section->users as $user) {
+            $section->users()->detach($user->id);
+        }
+
+        $section->delete();
+
+        return redirect()->route('companies.show', ['company' => $company]);
     }
 }

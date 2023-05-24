@@ -54,6 +54,6 @@ class User extends Authenticatable
 
     public function sections(): BelongsToMany
     {
-        return $this->belongsToMany(Section::class);
+        return $this->belongsToMany(Section::class, 'user_section');
     }
 }
