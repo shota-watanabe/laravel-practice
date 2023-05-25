@@ -16,15 +16,17 @@ use Illuminate\Support\Facades\Auth;
 
 class SectionController extends Controller
 {
-    public function create($id): View
+    public function create(Company $company): View
     {
-        $company = Company::findOrFail($id);
+        $this->authorize('view', $company);
 
         return view('companies.sections.create', compact('company'));
     }
 
     public function store(StoreSectionRequest $request, Company $company): RedirectResponse
     {
+        $this->authorize('create', $company);
+
         $company->sections()->create([
             'company_id' => $company->id,
             'name' => $request->name
@@ -37,6 +39,8 @@ class SectionController extends Controller
 
     public function show(Company $company, Section $section): View
     {
+        $this->authorize('view', [$company, $section]);
+
         $unjoin_users = User::where('company_id', $company->id)
             ->whereDoesntHave('sections', function ($query) use ($section) {
                 $query->where('section_id', $section->id);
@@ -53,12 +57,13 @@ class SectionController extends Controller
 
     public function edit(Company $company, Section $section): View
     {
-
         return view('companies.sections.edit', compact('company', 'section'));
     }
 
     public function update(UpdateSectionRequest $request, Company $company, Section $section): RedirectResponse
     {
+        $this->authorize('update', [$company, $section]);
+
         $section->fill($request->validated())
             ->save();
         return redirect()->route('companies.show', compact('company'));
@@ -67,6 +72,8 @@ class SectionController extends Controller
 
     public function destroy(Company $company, Section $section): RedirectResponse
     {
+        $this->authorize('delete', [$company, $section]);
+
         foreach ($section->users as $user) {
             $section->users()->detach($user->id);
         }

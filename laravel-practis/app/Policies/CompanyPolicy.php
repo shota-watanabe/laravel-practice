@@ -9,14 +9,6 @@ use Illuminate\Auth\Access\Response;
 class CompanyPolicy
 {
     /**
-     * Determine whether the user can view any models.
-     */
-    public function viewAny(User $user, Company $company): bool
-    {
-        return true;
-    }
-
-    /**
      * Determine whether the user can view the model.
      */
     public function view(User $user, Company $company): bool

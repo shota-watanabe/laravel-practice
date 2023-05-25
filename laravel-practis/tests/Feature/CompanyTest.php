@@ -84,6 +84,9 @@ class CompanyTest extends TestCase
 
         // 存在しない ID のときは、404 になる
         $this->actingAs($this->user)->get(route('companies.show', 9999))->assertStatus(404);
+
+        // 他人の会社の ID ときは、403になる
+        $this->actingAs($this->user)->get(route('companies.show', $this->companies->last()))->assertStatus(403);
     }
 
     public function test_edit(): void
@@ -95,6 +98,9 @@ class CompanyTest extends TestCase
 
         $this->actingAs($this->user)->get($url)->assertStatus(200);
 
+        // 他人の会社の ID ときは、403になる
+        $this->actingAs($this->user)->get(route('companies.edit', $this->companies->last()))->assertStatus(403);
+
     }
 
     public function test_update()
@@ -103,12 +109,18 @@ class CompanyTest extends TestCase
 
         $company_name = $this->faker->company;
 
-        $url = route('companies.update', $company->id);
+        $url = route('companies.update', $company);
 
         // Guest のときは、login にリダイレクトされる
         $this->put($url, [
             'name' => $company_name,
         ])->assertRedirect(route('login'));
+
+        // 他人の会社の ID ときは、403になる
+        $this->actingAs($this->user)
+            ->put(route('companies.update', $this->companies->last()), [
+                'name' => $company_name,
+            ])->assertStatus(403);
 
         $response = $this->actingAs($this->user)
             ->put($url, [
@@ -133,6 +145,11 @@ class CompanyTest extends TestCase
 
         // Guest のときは、login にリダイレクトされる
         $this->delete($url)->assertRedirect(route('login'));
+
+        // 他人の会社の ID ときは、403になる
+        $this->actingAs($this->user)
+             ->delete(route('companies.destroy', $this->companies->last()))
+             ->assertStatus(403);
 
         $response = $this->actingAs($this->user)->delete($url);
 
