@@ -54,11 +54,8 @@ class SectionTest extends TestCase
             'name' => $section_name,
         ])->assertRedirect(route('login'));
 
-        $this->actingAs($this->user)
-            ->post($url, [
-                'company_id' => $company->id,
-                'name' => $section_name,
-            ])->assertStatus(302);;
+        $this->authenticated_store_section($company, $section_name, $url)
+             ->assertStatus(302);
 
         $this->assertDatabaseHas('sections', [
             'name' => $section_name,
@@ -144,6 +141,21 @@ class SectionTest extends TestCase
 
         $validation = 'nameは、255文字以下で指定してください。';
         $this->get(route('companies.sections.edit', ['company' => $company, 'section' => $section]))->assertSee($validation);
+
+        $section_name = $this->faker->word();
+
+        $url = route('companies.sections.store', ['company' => $company->id, 'section' => $section->id]);
+        $this->authenticated_store_section($company, $section_name, $url);
+        $url = route('companies.sections.update', ['company' => $company->id, 'section' => $section->id]);
+
+        $validation = '部署名は既に存在しています。';
+
+        $this->actingAs($this->user)
+            ->put($url, [
+                'name' => $section_name,
+            ]);
+
+        $this->get(route('companies.sections.edit', ['company' => $company, 'section' => $section]))->assertSee($validation);
     }
 
     public function test_destroy(): void
@@ -172,6 +184,17 @@ class SectionTest extends TestCase
             'section_id' => $section->id
         ]);
 
+    }
+
+    public function authenticated_store_section($company, $section_name, $url)
+    {
+        $response = $this->actingAs($this->user)
+            ->post($url, [
+                'company_id' => $company->id,
+                'name' => $section_name,
+            ]);
+
+        return $response;
     }
 
 }
