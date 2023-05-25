@@ -23,13 +23,8 @@ class SectionController extends Controller
         return view('companies.sections.create', compact('company'));
     }
 
-    public function store(StoreSectionRequest $request, $company_id): RedirectResponse
+    public function store(StoreSectionRequest $request, Company $company): RedirectResponse
     {
-        $company = Company::findOrFail($company_id);
-
-        $request->validate([
-           'name' => [new UniqueSectionName($company->id)]
-        ]);
         $company->sections()->create([
             'company_id' => $company->id,
             'name' => $request->name
