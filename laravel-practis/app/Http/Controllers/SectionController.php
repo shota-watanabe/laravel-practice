@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\UserSection;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Support\Facades\Auth;
 
 class SectionController extends Controller
 {
@@ -29,6 +30,8 @@ class SectionController extends Controller
             'name' => $request->name
         ]);
 
+        Auth::user()->sections()->attach($company->sections->last()->id);
+
         return redirect()
             ->route('companies.show', compact('company'))
             ->with('status', 'Section Created!');
@@ -36,7 +39,7 @@ class SectionController extends Controller
 
     public function show(Company $company, Section $section): View
     {
-        $this->authorize('view', [$company, $section]);
+        $this->authorize('view', [$section, $company]);
 
         $unjoin_users = User::where('company_id', $company->id)
             ->whereDoesntHave('sections', function ($query) use ($section) {
@@ -59,7 +62,7 @@ class SectionController extends Controller
 
     public function update(UpdateSectionRequest $request, Company $company, Section $section): RedirectResponse
     {
-        $this->authorize('update', [$company, $section]);
+        $this->authorize('update', [$section, $company]);
 
         $section->fill($request->validated())
             ->save();
@@ -69,11 +72,9 @@ class SectionController extends Controller
 
     public function destroy(Company $company, Section $section): RedirectResponse
     {
-        $this->authorize('delete', [$company, $section]);
+        $this->authorize('delete', [$section, $company]);
 
-        foreach ($section->users as $user) {
-            $section->users()->detach($user->id);
-        }
+        $section->users()->detach(Auth::user()->id);
 
         $section->delete();
 

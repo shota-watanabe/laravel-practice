@@ -3,6 +3,7 @@
 namespace App\Policies;
 
 use App\Models\Company;
+use App\Models\Section;
 use App\Models\User;
 
 class SectionPolicy
@@ -15,16 +16,7 @@ class SectionPolicy
         //
     }
 
-    /**
-     * 指定した部署の会社をユーザーが閲覧可能かを判定
-     * 部署一覧は会社の詳細画面で閲覧可能
-     */
-    public function viewAny(User $user, Company $company): bool
-    {
-        return $user->company->id === $company->id;
-    }
-
-    public function view(User $user, Company $company, Section $section): bool
+    public function view(User $user, Section $section, Company $company): bool
     {
         return $user->company->id === $company->id && $company->id && $section->company->id;
     }
@@ -34,12 +26,12 @@ class SectionPolicy
         return $user->company->id === $company->id;
     }
 
-    public function update(User $user, Company $company, Section $section): bool
+    public function update(User $user, Section $section, Company $company): bool
     {
         return $user->company->id === $company->id && $company->id && $section->company->id;
     }
 
-    public function delete(User $user, Company $company, Section $section): bool
+    public function delete(User $user, Section $section, Company $company): bool
     {
         return $user->company->id === $company->id && $company->id && $section->company->id;
     }
