@@ -8,11 +8,8 @@ use App\Models\Company;
 use App\Models\Section;
 use App\Models\User;
 use App\Models\UserSection;
-use App\Rules\UniqueSectionName;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class SectionController extends Controller
 {
@@ -25,7 +22,7 @@ class SectionController extends Controller
 
     public function store(StoreSectionRequest $request, Company $company): RedirectResponse
     {
-        $this->authorize('create', $company);
+        $this->authorize('create', [Section::class, $company]);
 
         $company->sections()->create([
             'company_id' => $company->id,

@@ -7,6 +7,7 @@ use App\Models\Section;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class SectionTest extends TestCase
@@ -20,14 +21,15 @@ class SectionTest extends TestCase
     public function setUp(): void
     {
         parent::setUp();
-        $this->companies = Company::factory()->create();
+        $this->companies = Company::factory()->count(2)->create();
         $this->sections = Section::factory()->count(100)->create();
         $this->user = User::factory()->create();
     }
 
     public function test_index(): void
     {
-        $url = route('companies.show', $this->companies->first()->id);
+        $url = route('companies.show', $this->companies->first());
+
         // Guest のときは、login にリダイレクトされる
         $this->get($url)->assertRedirect(route('login'));
 
@@ -45,7 +47,11 @@ class SectionTest extends TestCase
         $company = $this->companies->first();
         $section = $company->sections->first();
 
-        $url = route('companies.sections.store', ['company' => $company->id, 'section' => $section->id]);
+        $other_company = $this->companies->last();
+        $other_section = $other_company->sections->first();
+
+        $url = route('companies.sections.store', ['company' => $company, 'section' => $section]);
+        $other_company_url = route('companies.sections.store', ['company' => $other_company, 'section' => $other_section]);
         $section_name = $this->faker->word();
 
         // 認証されていない場合、ログイン画面にリダイレクトされること
@@ -53,6 +59,9 @@ class SectionTest extends TestCase
             'company_id' => $company->id,
             'name' => $section_name,
         ])->assertRedirect(route('login'));
+
+        $this->authenticated_store_section($other_company, $this->faker->realText(), $other_company_url)
+             ->assertStatus(403);
 
         $this->authenticated_store_section($company, $section_name, $url)
              ->assertStatus(302);
@@ -186,7 +195,7 @@ class SectionTest extends TestCase
 
     }
 
-    public function authenticated_store_section($company, $section_name, $url)
+    public function authenticated_store_section($company, $section_name, $url): TestResponse
     {
         $response = $this->actingAs($this->user)
             ->post($url, [
