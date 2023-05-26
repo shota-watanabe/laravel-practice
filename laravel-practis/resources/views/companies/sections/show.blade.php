@@ -39,8 +39,8 @@
                     @csrf
                     <div class="px-3">
                         <select id="selection" name="user_id">
-                            @foreach($unjoin_users as $unjoin_user)
-                                <option value="{{ $unjoin_user->id }}">{{ $unjoin_user->name }}</option>
+                            @foreach($company->users as $company_user)
+                                <option value="{{ $company_user->id }}">{{ $company_user->name }}</option>
                             @endforeach
                         </select>
                     </div>
