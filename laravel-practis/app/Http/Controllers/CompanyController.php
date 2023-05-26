@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateCompanyRequest;
 use App\Models\Company;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Auth;
 
 class CompanyController extends Controller
 {
@@ -16,9 +16,9 @@ class CompanyController extends Controller
      */
     public function index(): View
     {
-        Log::info('Logです');
         // 複数の会社を一覧表示するので、変数は複数形で
-        $companies = Company::query()
+        $companies = Auth::user()
+            ->company()
             ->paginate()
             ->withQueryString();
 
@@ -53,6 +53,8 @@ class CompanyController extends Controller
      */
     public function show(Company $company): View
     {
+        $this->authorize('view', $company);
+
         $sections = $company->sections()
             ->paginate()
             ->withQueryString();;
@@ -64,6 +66,8 @@ class CompanyController extends Controller
      */
     public function edit(Company $company): View
     {
+        $this->authorize('view', $company);
+
         return view('companies.edit', compact('company'));
     }
 
@@ -72,6 +76,8 @@ class CompanyController extends Controller
      */
     public function update(UpdateCompanyRequest $request, Company $company): RedirectResponse
     {
+        $this->authorize('update', $company);
+
         $company->fill($request->validated())
             ->save();
 
@@ -83,6 +89,8 @@ class CompanyController extends Controller
      */
     public function destroy(Company $company): RedirectResponse
     {
+        $this->authorize('delete', $company);
+
         $company->delete();
 
         return redirect()->route('companies.index');

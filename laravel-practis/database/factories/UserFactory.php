@@ -21,7 +21,7 @@ class UserFactory extends Factory
     {
         return [
             'company_id' => function () {
-                return Company::query()->inRandomOrder()->first()->id;
+                return Company::first()->id;
             }, // company_id 追加
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),

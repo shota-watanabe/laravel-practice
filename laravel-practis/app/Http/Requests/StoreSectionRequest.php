@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Rules\UniqueSectionName;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreSectionRequest extends FormRequest
@@ -21,8 +22,10 @@ class StoreSectionRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @var Section $section */
+        $company = $this->route('company');
         return [
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', new UniqueSectionName(null, $company)],
         ];
     }
 }

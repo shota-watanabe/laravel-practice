@@ -8,32 +8,29 @@ use App\Models\Company;
 use App\Models\Section;
 use App\Models\User;
 use App\Models\UserSection;
-use App\Rules\UniqueSectionName;
 use Illuminate\Contracts\View\View;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
 class SectionController extends Controller
 {
-    public function create($id): View
+    public function create(Company $company): View
     {
-        $company = Company::findOrFail($id);
+        $this->authorize('view', $company);
 
         return view('companies.sections.create', compact('company'));
     }
 
-    public function store(StoreSectionRequest $request, $company_id): RedirectResponse
+    public function store(StoreSectionRequest $request, Company $company): RedirectResponse
     {
-        $company = Company::findOrFail($company_id);
+        $this->authorize('create', [Section::class, $company]);
 
-        $request->validate([
-           'name' => [new UniqueSectionName($company->id)]
-        ]);
         $company->sections()->create([
             'company_id' => $company->id,
             'name' => $request->name
         ]);
+
+        Auth::user()->sections()->attach($company->sections->last()->id);
 
         return redirect()
             ->route('companies.show', compact('company'))
@@ -42,6 +39,8 @@ class SectionController extends Controller
 
     public function show(Company $company, Section $section): View
     {
+        $this->authorize('view', [$section, $company]);
+
         $unjoin_users = User::where('company_id', $company->id)
             ->whereDoesntHave('sections', function ($query) use ($section) {
                 $query->where('section_id', $section->id);
@@ -58,12 +57,13 @@ class SectionController extends Controller
 
     public function edit(Company $company, Section $section): View
     {
-
         return view('companies.sections.edit', compact('company', 'section'));
     }
 
     public function update(UpdateSectionRequest $request, Company $company, Section $section): RedirectResponse
     {
+        $this->authorize('update', [$section, $company]);
+
         $section->fill($request->validated())
             ->save();
         return redirect()->route('companies.show', compact('company'));
@@ -72,9 +72,9 @@ class SectionController extends Controller
 
     public function destroy(Company $company, Section $section): RedirectResponse
     {
-        foreach ($section->users as $user) {
-            $section->users()->detach($user->id);
-        }
+        $this->authorize('delete', [$section, $company]);
+
+        $section->users()->detach(Auth::user()->id);
 
         $section->delete();
 
